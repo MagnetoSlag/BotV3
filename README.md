@@ -126,3 +126,82 @@ if (command === "orderremove") {
         }
 }
 ```
+## Major logic error found in all Admin commands, pls replace the following protion of code in ***ALL*** Admin command, for example:
+```
+if (command === "blacklist") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 200) {
+            if (args.length == 1) {
+                var TempUser = args.shift();
+                var TargetAccessLevel = CheckPermissionbyName(TempUser);
+                if (TargetAccessLevel == 2) {
+                    return message.channel.send("");
+```
+------- Replace the following line of code vvvvvvvvvvv---------- ----------------
+```
+                } else if (TargetAccessLevel >= 300) {
+
+                    return message.channel.send("This person can't be blacklisted!");
+
+                } else if (TargetAccessLevel >= 200) {
+```
+----------------------- WITH THESE CODE vvvvv ----------------------------------
+```
+                } else if (TargetAccessLevel >= AccessRight){       
+                //This means the targer user has higher access right then the user trying to modify him/er
+```
+---------------------- See example below --------------------------------------
+```
+                    return message.channel.send("This person can't be blacklisted!");
+                } else {
+                    for (var i = 0; i < GangList.Guest.length; i++) {
+                        if (GangList.Guest[i].Name == TempUser) {
+                            GangList.Guest[i].AccessLevel = 10;
+                        }
+                    }
+                    FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+                        if (err) console.error(err)
+                        console.log("H")
+                    });
+                    message.channel.send("User blacklisted!");
+                }
+            } else {
+                message.channel.send("Please put someone you want to blacklist!");
+            }
+        } else {
+            message.channel.send("You need to be an admin to perform this task!");
+        }
+    }
+```
+So, the finished command ***'blacklist'*** should look like these:
+```
+if (command === "blacklist") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 200) {
+            if (args.length == 1) {
+                var TempUser = args.shift();
+                var TargetAccessLevel = CheckPermissionbyName(TempUser);
+                if (TargetAccessLevel == 2) {
+                    return message.channel.send("");
+                } else if (TargetAccessLevel >= AccessRight) {                           
+                    return message.channel.send("This person can't be blacklisted!");
+                } else {
+                    for (var i = 0; i < GangList.Guest.length; i++) {
+                        if (GangList.Guest[i].Name == TempUser) {
+                            GangList.Guest[i].AccessLevel = 10;
+                        }
+                    }
+                    FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+                        if (err) console.error(err)
+                        console.log("H")
+                    });
+                    message.channel.send("User blacklisted!");
+                }
+            } else {
+                message.channel.send("Please put someone you want to blacklist!");
+            }
+        } else {
+            message.channel.send("You need to be an admin to perform this task!");
+        }
+    }
+```
