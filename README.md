@@ -1,5 +1,122 @@
 # BotV3
-Bot version 3 Feb 6, 2018
+----> Feb 13, 2018, updated command ***OrderCancel*** without asking for Order Tab, Please replace the command with the following code:
+```
+if (command === "ordercancel") {
+        var AccessRight = CheckPermission(message.author.id);
+
+        if (AccessRight >= 100) {           
+                var OrderTagFound = 0;
+                //var TempTag = args.shift();
+                if (OrderBook.OrderNumber.length == 1) {
+                    //special handle for only 1 order entry in shoporder.json file                 
+                    if (OrderBook.OrderNumber[1].CustomerID == message.author.id) {
+                        OrderTagFound = 1;
+                        OrderBook.OrderNumber.pop();
+                        FileHandle.writeFile("./ShopOrder.json", JSON.stringify(OrderBook), (err) => {
+                            if (err) {
+                                console.error(err);
+                                message.channel.send("Sorry, your order couldn't be deleted! Please try again.");
+                            }
+                        });
+                        message.channel.send(`Your order has been canceled!`);
+                    } else {
+                                message.channel.send("Sorry, you can't cancel an order that isn't yours.");
+                    }                    
+                } else {
+                    for (var i = 1; i < OrderBook.OrderNumber.length; i++) {
+                        if (OrderBook.OrderNumber[i].CustomerID == message.author.id) {
+                            OrderTagFound = 1;
+                            OrderBook.OrderNumber.splice(i, 1);
+                            FileHandle.writeFile("./ShopOrder.json", JSON.stringify(OrderBook), (err) => {
+                                if (err) {
+                                    console.error(err);
+                                    message.channel.send("Sorry, your order couldn't be canceled! Please try again.");
+                                }
+                            });
+                            message.channel.send(`Your order has been canceled!`);
+                        } else {
+                            message.channel.send("Sorry, you can't cancel an order that isn't yours.");
+                        }                       
+                    }
+                }
+                if (OrderTagFound == 0) {
+                    message.channel.send("Sorry, we couldn't find an order. Use `>myorder` to check on your order!");
+                }            
+        } else {
+            message.channel.send("You were blacklisted, please use the `>server` command to join our server and DM an admin to appeal.");
+        }
+    }
+```
+---> command ***myorder*** also updated to display Chef name if claimed by a chef, please replace with the following code:
+```
+if (command === "myorder") {
+        var AccessRight = CheckPermission(message.author.id);
+        var i;
+        var HasEntry = 1;
+
+        if (AccessRight >= 100) {
+            for (i = 0; i < OrderBook.OrderNumber.length; i++) {
+                if (OrderBook.OrderNumber[i].CustomerID == message.author.id) {
+                    HasEntry = 0;
+                    message.channel.send(" Here's your order information!");
+                    if (OrderBook.OrderNumber[i].Status == "unclaim") {       //order unclaimed
+                        myOrder = new Discord.RichEmbed()
+                            .setColor("#ffefbf")
+                            .setDescription('[Order Information](https://google.ie/)')
+                            .addField(`Order`, `${OrderBook.OrderNumber[i].Particulars}`, true)
+                            .addField(`Customer`, `You!`, true)
+                            .addField(`ID`, `${OrderBook.OrderNumber[i].OrderTag}`, true)
+                            .addField(`Status`, `Awaiting a chef`, true)
+                            .setThumbnail(message.author.avatar);
+                        message.channel.send(myOrder);
+                        
+                    } else {                                                    //order unclaimed
+                        //lookup chef name
+                        var ChefID = OrderBook.OrderNumber[i].Status;
+                        var ChefName = "unclaim";
+                        for (var j = 0; j < GangList.Guest.length; j++) {
+                            if (GangList.Guest[j].UID == ChefID) {
+                                ChefName = GangList.Guest[j].Name;
+                                myOrder = new Discord.RichEmbed()
+                                    .setColor("#ffefbf")
+                                    .setDescription('[Order Information](https://google.ie/)')
+                                    .addField(`Order`, `${OrderBook.OrderNumber[i].Particulars}`, true)
+                                    .addField(`Customer`, `You!`, true)
+                                    .addField(`ID`, `${OrderBook.OrderNumber[i].OrderTag}`, true)
+                                    .addField(`Status`, `Handled by ${ChefName}`, true)
+                                    .setThumbnail(message.author.avatar);
+                            }
+                        }
+                        //incase chef name not found
+                        if (ChefName == "unclaim") {
+                            myOrder = new Discord.RichEmbed()
+                                .setColor("#ffefbf")
+                                .setDescription('[Order Information](https://google.ie/)')
+                                .addField(`Order`, `${OrderBook.OrderNumber[i].Particulars}`, true)
+                                .addField(`Customer`, `You!`, true)
+                                .addField(`ID`, `${OrderBook.OrderNumber[i].OrderTag}`, true)
+                                .addField(`Status`, `Handled by Unknow Chef, pls contact admin!`, true)
+                                .setThumbnail(message.author.avatar);
+                        }
+                        message.channel.send(myOrder);
+                    }
+                }
+            }
+
+            if (HasEntry) {
+                message.channel.send("I don't think you've ordered anything yet! Order something with `>order`!");
+            }
+
+        } else {
+            message.channel.send("You were blacklisted, please use the `>server` command to join our server and DM an admin to appeal, " + message.author.user + "!");
+        }
+    }
+```
+===> end of update Feb 13, 2018
+
+
+---> Bot version 3 Feb 6, 2018
+
 Bot V3 added new fields to both GuestBook.json and ShopOrder.json, so pls download and put to your local folder thx!
 ```
     if (command === "orderlist") {
