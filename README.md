@@ -95,7 +95,7 @@ if (command === "myorder") {
                                 .addField(`Order`, `${OrderBook.OrderNumber[i].Particulars}`, true)
                                 .addField(`Customer`, `You!`, true)
                                 .addField(`ID`, `${OrderBook.OrderNumber[i].OrderTag}`, true)
-                                .addField(`Status`, `Handled by Unknow Chef, pls contact admin!`, true)
+                                .addField(`Status`, `Handled by Unknown Chef, pls contact admin!`, true)
                                 .setThumbnail(message.author.avatar);
                         }
                         message.channel.send(myOrder);
