@@ -1,4 +1,57 @@
 # BotV3
+----> Feb 20, 2018, updated command ***Orderdeliver*** the order delivered will be send to bot as DM, since my avatar not working on my side, so you may change the message to richembed and dm to the customer if you like. ImgLink[0].url contain the URL,link,invite I am not sure what your invite means but that is the link which connect you to the image upload by the chef:
+```
+if (command === "orderdeliver") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 150) {
+            if (args.length >= 1) {
+                var OrderTagFound = 0;
+                var TempTag = args.shift();
+                const lemChannel = Bot.channels.find("id", "403129323483037707");
+                const ImgLink = (message.attachments).array();      //any empty link check?
+                
+                // ImgLink[0].url contain the URL (link) to the picture where the chef attachted to the msg
+
+                //check that this order has been claimed by this chef before delivery
+                for (var i = 1; i < OrderBook.OrderNumber.length; i++) {
+                    if ((OrderBook.OrderNumber[i].OrderTag == TempTag) && (OrderBook.OrderNumber[i].Status == message.author.id)){
+                        OrderTagFound = 1;
+                        const TempCustomer = OrderBook.OrderNumber[i].CustomerID;       //this contain the customer ID who placed the order, you can use to construct your richembed msg
+                        //should check valid deliver before remove order, assume deliver is valid first
+                        if (ImgLink.length > 0) {
+                            OrderBook.OrderNumber.splice(i, 1);
+                            FileHandle.writeFileSync("./ShopOrder.json", JSON.stringify(OrderBook), (err) => {
+                                if (err) {
+                                    console.error(err);
+                                    message.channel.send("The order couldn't be delivered. Please try again.");
+                                }
+                            });
+                            //message.channel.send(`Order **${TempTag}** has been delivered`);
+                            message.author.send(`Order **${TempTag}** has been delivered (link:` + ImgLink[0].url);
+                            
+                            //send DM to customer, I have some problem with the rich embed msg with avatar, one of my ac can get it one will cause server error
+                           
+                            //message.lemChannel.send(`Order **${TempTag}** has been delivered.`);
+                        } else {
+                            message.author.send('Please deliver goods according to our customer ordered!');
+                        }
+                    }
+                }
+
+                if (OrderTagFound == 0) {
+                    message.channel.send(`There's no order with the id **${TempTag}** or you didnt claim it before!`);
+                }
+
+            } else {
+                message.channel.send("Please enter an ID to deliver, you can't deliver nothing!");
+            }
+        } else {
+            message.channel.send("You aren't a chef!");
+        }
+    }
+```
+------------------------------- <<< END if Feb 20, 2018 update >>> -----------
+
 ----> Feb 13, 2018, updated command ***OrderCancel*** without asking for Order Tab, Please replace the command with the following code:
 ```
 if (command === "ordercancel") {
