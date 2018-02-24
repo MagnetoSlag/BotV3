@@ -31,9 +31,7 @@ if (command === "orderdeliver") {
                                 message.channel.send("The order couldn't be delivered. Please try again.");
                             }
                         });
-                        //message.channel.send(`Order **${TempTag}** has been delivered`);
-                        message.author.send(`Order **${TempTag}** has been delivered (link:` + ImgLink[0].url);
-                            
+                        message.channel.send(`Order **${TempTag}** has been delivered`);                            
                         //send DM to customer, I have some problem with the rich embed msg with avatar, one of my ac can get it one will cause server error
                            
                         //message.lemChannel.send(`Order **${TempTag}** has been delivered.`);
