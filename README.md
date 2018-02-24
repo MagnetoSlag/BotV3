@@ -1,4 +1,59 @@
 # BotV3
+----> Feb 24, 2018, updated command ***Order*** and ***OrderDeliver***
+Please replace this line in command ***Order*** this will make the FromServer to store the channel ID instead of server name
+```
+ShoppingCart.FromServer = message.channel.id;       //change this to channel ID
+```
+And here is the ***OrderDeliver*** command, I updated the send invit link session, meanwhile the DM to customer left for you to do the richembeded thing :p
+```
+if (command === "orderdeliver") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 150) {
+            if (args.length >= 1) {
+                var OrderTagFound = 0;
+                var TempTag = args.shift();
+                const lemChannel = Bot.channels.find("id", "403129323483037707");
+
+                //check that this order has been claimed by this chef before delivery
+                for (var i = 1; i < OrderBook.OrderNumber.length; i++) {
+                    if ((OrderBook.OrderNumber[i].OrderTag == TempTag) && (OrderBook.OrderNumber[i].Status == message.author.id)){
+                        OrderTagFound = 1;
+                        const TempCustomer = OrderBook.OrderNumber[i].CustomerID;       //this contain the customer ID who placed the order, you can use to construct your richembed msg
+                        const CustomerChannel = OrderBook.OrderNumber[i].FromServer;    //This is the channel ID of where the customer place order
+                        // sent customer invite link
+                        message.guild.channels.get(CustomerChannel).createInvite().then(invite => message.channel.send(invite.url)
+                        );
+
+                        OrderBook.OrderNumber.splice(i, 1);
+                        FileHandle.writeFileSync("./ShopOrder.json", JSON.stringify(OrderBook), (err) => {
+                            if (err) {
+                                console.error(err);
+                                message.channel.send("The order couldn't be delivered. Please try again.");
+                            }
+                        });
+                        //message.channel.send(`Order **${TempTag}** has been delivered`);
+                        message.author.send(`Order **${TempTag}** has been delivered (link:` + ImgLink[0].url);
+                            
+                        //send DM to customer, I have some problem with the rich embed msg with avatar, one of my ac can get it one will cause server error
+                           
+                        //message.lemChannel.send(`Order **${TempTag}** has been delivered.`);
+                    }
+                }
+
+                if (OrderTagFound == 0) {
+                    message.channel.send(`There's no order with the id **${TempTag}** or you didnt claim it before!`);
+                }
+
+            } else {
+                message.channel.send("Please enter an ID to deliver, you can't deliver nothing!");
+            }
+        } else {
+            message.channel.send("You aren't a chef!");
+        }
+}
+```
+------------------------- >> END OF FEB 24, 2018 UPDATE << ----------------
+
 ----> Feb 20, 2018, updated command ***Orderdeliver*** the order delivered will be send to bot as DM, since my avatar not working on my side, so you may change the message to richembed and dm to the customer if you like. ImgLink[0].url contain the URL,link,invite I am not sure what your invite means but that is the link which connect you to the image upload by the chef:
 ```
 if (command === "orderdeliver") {
