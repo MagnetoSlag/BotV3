@@ -1,4 +1,16 @@
 # BotV3
+----------------------------- >> March 6 Patch <<-----------------------------
+## 1.Remove the {} in the following line of code in command **>order**:
+instead of:
+```
+message.channel.send("Sorry, please wait for your last order, **" + { UPOTag } + "**, to be delivered before you order something else! Check your order status with `>myorder`");
+```
+take out the {}:
+```
+message.channel.send("Sorry, please wait for your last order, **" + UPOTag + "**, to be delivered before you order something else! Check your order status with `>myorder`");
+```
+
+----------------------------- << End of March 6 Patch >>----------------------
 ----------------------------- >> March 5 update <<----------------------------
 ## 1. Replace the ShopOrder.json file content with the following:
 ```
