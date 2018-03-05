@@ -9,6 +9,20 @@ take out the {}:
 ```
 message.channel.send("Sorry, please wait for your last order, **" + UPOTag + "**, to be delivered before you order something else! Check your order status with `>myorder`");
 ```
+## 2. Inside command **>blacklist** you have changed the code from:
+```
+FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+    if (err) console.error(err)
+});
+```
+to this code -->
+```
+FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+    if (err) console.error(err)
+    console.log("H")        //you added this line without a ; at the end!!!
+});
+```
+which you missed a ; at the end of the console.log("H") this cause the bot didnt update the blacklisted user permission in the Guestook.json file, that is the reason why blacklisted user can still use commands.
 
 ----------------------------- << End of March 6 Patch >>----------------------
 
