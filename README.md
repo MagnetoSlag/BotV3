@@ -1,4 +1,59 @@
 # BotV3
+----------------------------- >> March 6 (4th) Patch <<-------------------------
+## 1. Add this function after function CheckPermissionbyName():
+```
+function CheckPermissionbyID(IDtoLookUp) {
+    var RecordFound = 0;
+    for (var i = 0; i < GangList.Guest.length; i++) {
+        if (GangList.Guest[i].UID == IDtoLookUp) {
+            console.log("Target Permisson lookup: " + IDtoLookUp + " AccessLevel: " + GangList.Guest[i].AccessLevel);
+            RecordFound = 1;
+            return GangList.Guest[i].AccessLevel;
+        }
+    }
+    if (!RecordFound) {
+        console.log("Target Permission lookup: " + IDtoLookUp + " failed");
+        return 2;
+    }
+}
+```
+i.e. like this
+```
+function CheckPermissionbyName(NametoLookUp) {
+    var RecordFound = 0;
+    for (var i = 0; i < GangList.Guest.length; i++) {
+        if (GangList.Guest[i].Name == NametoLookUp) {
+            console.log("Target Permisson lookup: " + NametoLookUp + " AccessLevel: " + GangList.Guest[i].AccessLevel);
+            RecordFound = 1;
+            return GangList.Guest[i].AccessLevel;
+        }
+    }
+
+    if (!RecordFound) {
+        console.log("Target Permission lookup: " + NametoLookUp + " failed");
+        return 2;
+    }
+}
+
+function CheckPermissionbyID(IDtoLookUp) {
+    var RecordFound = 0;
+    for (var i = 0; i < GangList.Guest.length; i++) {
+        if (GangList.Guest[i].UID == IDtoLookUp) {
+            console.log("Target Permisson lookup: " + IDtoLookUp + " AccessLevel: " + GangList.Guest[i].AccessLevel);
+            RecordFound = 1;
+            return GangList.Guest[i].AccessLevel;
+        }
+    }
+    if (!RecordFound) {
+        console.log("Target Permission lookup: " + IDtoLookUp + " failed");
+        return 2;
+    }
+}
+
+function GenOrderTag() {
+   baba ba ba ba ba..
+```
+
 ----------------------------- >> March 6 (3rd) Patch <<-------------------------
 ## 1. You may want to add this code at the beginning for your code:
 ```
