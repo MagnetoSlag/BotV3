@@ -1,4 +1,54 @@
 # BotV3
+----------------------------- >> March 6 (3rd) Patch <<-------------------------
+## 1. You may want to add this code at the beginning for your code:
+```
+Bot.on("ready", () => {
+    console.log('Bot Ready with ' + Bot.guilds.size + ' servers running');
+    console.log('Bot is up and running');
+})
+```
+i.e. place the above code after function GenOrderTag(), like this:
+```
+function GenOrderTag() {
+    //generates random order id and check for consistency
+    var TempTag = Math.floor(Math.random() * 999) + 1;
+    var i;
+    var OKTag = 0;
+    var y = OrderBook.OrderNumber.length;
+    console.log("Requested GenOrderTag, assigned: " + TempTag);
+    console.log('Array Length: ' + y);
+    while (OKTag == 0) {
+        i = 0;
+        while (i < y) {
+            OKTag = 1;
+            if (OrderBook.OrderNumber[i].OrderTag == TempTag) {
+                console.log('Order ID already taken' + TempTag);
+                //making a new order id if the one it made already exists
+                if (TempTag == 999) {       //makes sure order id is below 1000
+                    TempTag = 0;
+                } else {
+                    TempTag++;
+                }
+                OKTag = 0;                  //makes sure the new value will be tested for duplication again
+                i = y;                      //this will exit the while loop asap instead of using return or break
+            } else {
+                i++;
+            }
+        }
+        //console.log('GenOrderTag duplication scan completed!');
+    }
+    //console.log("GenOrderTag Function Done with OrderTag: " + TempTag);
+    return TempTag;
+}
+
+Bot.on("ready", () => {
+    console.log('Bot Ready with ' + Bot.guilds.size + ' servers running');
+    console.log('Bot is up and running');
+})
+
+Bot.on('message', (message) => { ..ba ba ba baba,,
+```
+
 ----------------------------- >> March 6 (2nd) Patch <<-------------------------
 ## 1. Replace this code in command **>orderdeliver**:
 ```
