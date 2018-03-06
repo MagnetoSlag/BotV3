@@ -53,7 +53,156 @@ function CheckPermissionbyID(IDtoLookUp) {
 function GenOrderTag() {
    baba ba ba ba ba..
 ```
+## 2. Updated admin command:
+```
+ if (command === "blacklist") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 200) {
+            if (args.length == 1) {
+                var TempUser = args.shift();
+                var TargetAccessLevel = CheckPermissionbyID(TempUser);
+                if (TargetAccessLevel == 2) {
+                    return message.channel.send("");
+                } else if (TargetAccessLevel >= AccessRight) {
+                    return message.channel.send("This person can't be blacklisted!");
+                } else {
+                    for (var i = 0; i < GangList.Guest.length; i++) {
+                        if (GangList.Guest[i].UID == TempUser) {
+                            GangList.Guest[i].AccessLevel = 10;
+                        }
+                    }
+                    FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+                        if (err) console.error(err)
+                        console.log("H");
+                    });
+                    message.channel.send("User blacklisted!");
+                }
+            } else {
+                message.channel.send("Please put someone you want to blacklist!");
+            }
+        } else {
+            message.channel.send("You need to be an admin to perform this task!");
+        }
+    }
 
+    if (command === "unblacklist") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 200) {
+            if (args.length == 1) {
+                var TempUser = args.shift();
+                var TargetAccessLevel = CheckPermissionbyID(TempUser);
+                if (TargetAccessLevel == 2) {
+                    return message.channel.send("");
+                } else if (TargetAccessLevel >= AccessRight) {
+                    return message.channel.send("This person shouldn't be blacklisted.");
+                } else {
+                    for (var i = 0; i < GangList.Guest.length; i++) {
+                        if (GangList.Guest[i].UID == TempUser) {
+                            GangList.Guest[i].AccessLevel = 100;
+                        }
+                    }
+                    FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+                        if (err) console.error(err)
+                    });
+                    message.channel.send("User unblacklisted!");
+                }
+            } else {
+                message.channel.send("Please put someone you want to unblacklist!");
+            }
+        } else {
+            message.channel.send("You need to be an admin to perform this task!");
+        }
+    }
+
+    if (command === "chefnew") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 200) {
+            if (args.length == 1) {
+                var TempUser = args.shift();
+                var TargetAccessLevel = CheckPermissionbyID(TempUser);
+                if (TargetAccessLevel == 2) {
+                    return message.channel.send(`${TempUser} couldn't be found!`);
+                } else if (TargetAccessLevel >= AccessRight) {          
+                    return message.channel.send("You don't have permissions to do this!");
+                } else {
+                    for (var i = 0; i < GangList.Guest.length; i++) {
+                        if (GangList.Guest[i].UID == TempUser) {
+                            GangList.Guest[i].AccessLevel = 150;
+                        }
+                    }
+                    FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+                        if (err) console.error(err)
+                    });
+                    message.channel.send(`${TempUser} has been hired! Congratulations!`);
+                }
+                
+            } else {
+                message.channel.send("Please put someone you want to hire!");
+            }           
+        } else {
+            message.channel.send("You aren't an admin! Heck off >:(");
+        }
+    }
+
+    if (command === "chefdel") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 200) {
+            if (args.length == 1) {
+                var TempUser = args.shift();
+                var TargetAccessLevel = CheckPermissionbyID(TempUser);
+                if (TargetAccessLevel == 2) {
+                    return message.channel.send(`${TempUser} couldn't be found!`);
+                } else if (TargetAccessLevel >= AccessRight) {
+                    return message.channel.send("This person can't be deleted!");
+                } else {
+                    for (var i = 0; i < GangList.Guest.length; i++) {
+                        if (GangList.Guest[i].UID == TempUser) {
+                            GangList.Guest[i].AccessLevel = 100;
+                        }
+                    }
+                    FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+                        if (err) console.error(err)
+                    });
+                    message.channel.send(`${TempUser} has been removed from the chef list!`);
+                }
+            } else {
+                message.channel.send("Please put someone you want to delete!");
+            }
+        } else {
+            message.channel.send("You aren't an admin! Heck off >:(");
+        }
+    }
+
+    if (command === "chefadmin") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 200) {
+            if (args.length == 1) {
+                var TempUser = args.shift();
+                var TargetAccessLevel = CheckPermissionbyID(TempUser);
+                if (TargetAccessLevel == 2) {
+                    return message.channel.send(`${TempUser} couldn't be found!`);
+                } else if (TargetAccessLevel >= AccessRight) {
+                    return message.channel.send("This person is already an admin!");
+                } else {
+                    for (var i = 0; i < GangList.Guest.length; i++) {
+                        if (GangList.Guest[i].UID == TempUser) {
+                            GangList.Guest[i].AccessLevel = 200;
+                        }
+                    }
+                    FileHandle.writeFileSync("./GuestBook.json", JSON.stringify(GangList), (err) => {
+                        if (err) console.error(err)
+                    });
+                    message.channel.send(`Administrative permissions given!`);
+                }
+            } else {
+                message.channel.send("Please put someone you want to give admin!");
+            }
+        } else {
+            message.channel.send("You aren't an admin! Heck off! >:(");
+        }
+}
+```
+-----------------------------<< End of March 6 (4th) Path >>---------------------------
 ----------------------------- >> March 6 (3rd) Patch <<-------------------------
 ## 1. You may want to add this code at the beginning for your code:
 ```
