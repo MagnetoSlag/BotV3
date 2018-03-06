@@ -1,4 +1,56 @@
 # BotV3
+----------------------------- >> March 6 2nd Patch <<-------------------------
+## 1. Replace this code in command **>orderdeliver**:
+```
+if (command === "orderdeliver") {
+        var AccessRight = CheckPermission(message.author.id);
+        if (AccessRight >= 150) {
+            if (args.length >= 1) {
+                var OrderTagFound = 0;
+                var TempTag = args.shift();
+                const kitchen = Bot.channels.find("id", "415980011548573699");
+
+                //check that this order has been claimed by this chef before delivery
+                for (var i = 1; i < OrderBook.OrderNumber.length; i++) {
+                    if ((OrderBook.OrderNumber[i].OrderTag == TempTag) && (OrderBook.OrderNumber[i].Status == message.author.id)) {
+                        OrderTagFound = 1;
+                        const TempCustomer = OrderBook.OrderNumber[i].CustomerID;       //this contain the customer ID who placed the order, you can use to construct your richembed msg
+                        const CustomerChannel = OrderBook.OrderNumber[i].FromChannel;    //This is the channel ID of where the customer place order
+                        const CustomerGuild = OrderBook.OrderNumber[i].FromServer;      //this is the server ID of where the customer place order
+                        let TargetGuild = Bot.guilds.get(CustomerGuild);
+                        if (TargetGuild.channels.get(TChannleID).permissionsFor(message.member).hasPermission("CREATE_INSTANT_INVITE")) {
+                            TargetGuild.channels.get(CustomerChannel).createInvite().then(invite => message.author.send(invite.url)
+                            );
+                            OrderBook.OrderNumber.splice(i, 1);
+                            FileHandle.writeFileSync("./ShopOrder.json", JSON.stringify(OrderBook), (err) => {
+                                if (err) {
+                                    console.error(err);
+                                    message.channel.send("The order couldn't be delivered. Please try again.");
+                                }
+                            });
+                            message.channel.send(`Order **${TempTag}** has been delivered`);
+                        } else {
+                            message.channel.send(`I am sorry, I do not have enough permission on customer guild to let you perform the delivery, order remain undelivered`);
+                        }                        
+                    }
+                }
+
+                if (OrderTagFound == 0) {
+                    message.channel.send(`There's no order with the id **${TempTag}** or you didnt claim it before!`);
+                }
+
+            } else {
+                message.channel.send("Please enter an ID to deliver, you can't deliver nothing!");
+            }
+        } else {
+            message.channel.send("You aren't a chef!");
+        }
+}
+```
+I added check bot permission on target guild before sending delivery invite, hope this work out
+
+-----------------------------<< End of March 6 2nd Patch >>--------------------
+
 ----------------------------- >> March 6 Patch <<-----------------------------
 ## 1.Remove the {} in the following line of code in command **>order**:
 instead of:
