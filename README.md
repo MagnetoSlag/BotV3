@@ -1,5 +1,5 @@
 # BotV3
------------------------------ >> March 6 2nd Patch <<-------------------------
+----------------------------- >> March 6 (2nd) Patch <<-------------------------
 ## 1. Replace this code in command **>orderdeliver**:
 ```
 if (command === "orderdeliver") {
